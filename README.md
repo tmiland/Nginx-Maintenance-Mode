@@ -49,8 +49,9 @@ server {
   }
 ```
 
-- When maintenance mode is toggled on, maintenance-page_off.html will be re-named to $server_name-maintenance-page_on.html. E.g: your.hostname.com-maintenance-page_on.html
-- This way you can use this with multiple virtual servers, and easily toggle on/off maintenance mode individiually for each site. 
+- When maintenance mode is toggled on, maintenance-page_off.html will be copied to $server_name-maintenance-page_on.html. E.g: your.hostname.com-maintenance-page_on.html
+- This way you can use this with multiple virtual servers, and easily toggle on/off maintenance mode individiually for each site.
+- Toggle off, deletes $server_name-maintenance-page_on.html
 
 # Advanced usage
 
