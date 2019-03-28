@@ -22,8 +22,6 @@ $ git clone https://github.com/alexphelps/server-error-pages.git /etc/nginx/html
 $ cp -rp /etc/nginx/html/server-error-pages/_site/maintenance-page.html /etc/nginx/html/server-error-pages/_site/maintenance-page_off.html
 $ nginx -t # Check for errors, if found, correct them and;
 $ chmod +x maintenance.sh
-$ ./maintenance.sh your.hostname.com on # Or
-$ ./maintenance.sh your.hostname.com off
 ```
 
 ### Add to server directive
@@ -82,16 +80,6 @@ location @maintenance
 
 - If your.hostname.com-maintenance-page_on.html exists, a error 503 is returned.
 - If not, operation is back to normal.
-
-
-
-
-
-
-
-
-
-
 
 
 ## Credits
