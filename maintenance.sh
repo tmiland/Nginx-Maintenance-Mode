@@ -11,7 +11,7 @@ set -e
 ######################################################################
 
 
-version='1.0.0'
+version='1.0.1'
 #------------------------------------------------------------------------------#
 #
 # MIT License
@@ -40,6 +40,7 @@ version='1.0.0'
 # Declare variables
 SERVICE_NAME=nginx.service
 maintenance_file_path=/etc/nginx/html/server-error-pages/_site
+GITHUB_REPO=https://github.com/tmiland/Nginx-Maintenance-Mode
 # Icons used for printing
 ARROW='➜'
 DONE='✔'
@@ -65,7 +66,49 @@ HIDDEN="\033[8m"
 server_name=`echo "$1"`
 toggle=`echo "$2"`
 
-header() {
+# Show service status - @FalconStats
+show_status () {
+  # Add more services if you want to monitor 
+  declare -a services=(
+    "nginx"
+    "httpd"
+  )
+  declare -a serviceName=(
+    "Nginx"
+    "Apache"
+  )
+  declare -a serviceStatus=()
+  for service in "${services[@]}"
+  do
+    serviceStatus+=($(systemctl is-active "$service.service"))
+  done
+  echo ""
+  for i in ${!serviceStatus[@]}
+  do
+    if [[ "${serviceStatus[$i]}" == "active" ]]; then
+      line+="${GREEN}${NC}${serviceName[$i]}: ${GREEN}● ${serviceStatus[$i]}${NC} "
+    else
+      line+="${serviceName[$i]}: ${RED}▲ ${serviceStatus[$i]}${NC} "
+    fi
+  done
+  echo -e "$line"
+}
+
+SHOW_STATUS=$(show_status)
+
+# Check input
+check_input() {
+  echo ""
+  echo -e "${ORANGE}${INVERT}${WARNING}${BOLD} Nginx Maintenance Mode ${NC}"
+  echo ""
+  echo -e "${ORANGE}${ARROW} Usage:${NC}${GREEN} ./maintenance.sh [hostname] [on/off] ${NC}"
+  echo ""
+}
+
+INPUT_CHECK=$(check_input)
+
+# Exit Script
+exit_script () {
   printf "${GREEN}"
   cat << "EOF"
      _   __      _
@@ -82,24 +125,39 @@ header() {
 
 EOF
   printf "${NC}"
+  echo -e "
+    This script is fueled by coffee ☕
+
+   ${GREEN}${DONE}${NC} ${BBLUE}Paypal${NC} ${ARROW} ${ORANGE}https://paypal.me/milanddata${NC}
+   ${GREEN}${DONE}${NC} ${BBLUE}BTC${NC}    ${ARROW} ${ORANGE}3MV69DmhzCqwUnbryeHrKDQxBaM724iJC2${NC}
+   ${GREEN}${DONE}${NC} ${BBLUE}BCH${NC}    ${ARROW} ${ORANGE}qznnyvpxym7a8he2ps9m6l44s373fecfnv86h2vwq2${NC}
+  "
+  echo -e "Documentation for this script is available here: ${ORANGE}\n${ARROW} ${GITHUB_REPO}${NC}\n"
+  echo -e "${ORANGE}${ARROW} Goodbye.${NC} ☺"
+  echo ""
+  exit
+}
+
+header() {
   printf "${BLUE}"
   cat << EOF
+
 ╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
 ║                      Nginx Maintenance mode                       ║
 ║                                                                   ║
 ║        Easily toggle on or off maintenance mode with nginx        ║
 ║                                                                   ║
-║                      Maintained by @tmiland                       ║
+║             Version: $version Maintained by @tmiland                 ║
+║                                                                   ║
 ╚═══════════════════════════════════════════════════════════════════╝
-
 EOF
   printf "${NC}"
   echo ""
-  echo -e "Documentation for this script is available here: ${ORANGE}\n ${ARROW} https://github.com/tmiland/Nginx-Maintenance-Mode${NC}\n"
+  echo -e "Documentation for this script is available here: ${ORANGE}\n ${ARROW} ${GITHUB_REPO}${NC}\n"
 }
-##
+
 # Make sure that the script runs with root permissions
-##
 chk_permissions () {
   if [[ "$EUID" != 0 ]]; then
     echo -e "${RED}${ERROR} This action needs root permissions.${NC} Please enter your root password...";
@@ -110,9 +168,8 @@ chk_permissions () {
     exit 0;
   fi
 }
-##
+
 # Make sure the maintenance file path exists
-##
 function checkDirExists() {
   if [ ! -d "$maintenance_file_path" ]
   then
@@ -120,46 +177,49 @@ function checkDirExists() {
     exit 1
   fi
 }
-##
+
 # Check if maintenance mode is off
-##
 function checkToggleOn() {
   if [ ! -e "$maintenance_file_path/$server_name-maintenance-page_on.html" ]
   then
-    echo -e "${RED}${ERROR} Maintenance mode is already off ${NC}"
-    exit 1
-  fi
-}
-##
-# Check if maintenance mode is on
-##
-function checkToggleOff() {
-  if [ ! -e "$maintenance_file_path/maintenance-page_off.html" ]
-  then
-    echo -e "${RED}${ERROR} Maintenance mode is already on ${NC}"
+    echo -e "${RED}${ERROR} Maintenance mode is already off for $server_name ${NC}"
+    echo -e "${SHOW_STATUS} \n"
     exit 1
   fi
 }
 
+# Check if maintenance mode is on
+function checkToggleOff() {
+  if [ -e "$maintenance_file_path/$server_name-maintenance-page_on.html" ]
+  then
+    echo -e "${RED}${ERROR} Maintenance mode is already on for $server_name ${NC}"
+    echo -e "${SHOW_STATUS} \n"
+    exit 1
+  fi
+}
+
+# only runs if nginx -t succeeds
+safe_reload() {
+  nginx -t &&
+  systemctl reload $SERVICE_NAME
+}
+
 # Restart Nginx
 restartNginx () {
-  printf "\n-- ${GREEN}${ARROW} restarting Nginx\n ${NC}"
-  ${SUDO} systemctl restart $SERVICE_NAME
+  printf "\n-- ${GREEN}${ARROW} reloading Nginx\n\n ${NC}"
+  safe_reload
   sleep 2
-  ${SUDO} systemctl status $SERVICE_NAME --no-pager
+  echo -e "${SHOW_STATUS} "
+  #systemctl show -p SubState --value $SERVICE_NAME
   printf "\n"
-  echo -e "${GREEN}${DONE} Nginx has been restarted ${NC}"
+  echo -e "${GREEN}${DONE} Nginx has been reloaded ${NC}"
   sleep 3
 }
 
 #check command input
 if [[ -z "$1" && -z "$2" ]];
 then
-  echo -e "${ORANGE}${INVERT}${WARNING}${BOLD} Nginx Maintenance Mode ${NC}"
-  echo ""
-  echo ""
-  echo -e "${ORANGE}${ARROW} Usage:${NC}${GREEN} ./maintenance.sh [hostname] [on/off] ${NC}"
-  echo ""
+  echo -e "${INPUT_CHECK}"
   exit 0
 fi
 main() {
@@ -186,9 +246,10 @@ elif [ "$2" == "off" ]
     echo -e "${GREEN}${DONE} Maintenance mode has been disabled ${NC}"
     restartNginx
   else
-    echo "No command found."
+    echo -e "${INPUT_CHECK}"
   fi
 }
 
 header
 main $@
+exit_script
