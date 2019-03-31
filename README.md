@@ -1,5 +1,19 @@
 # Nginx Maintenance Mode
 
+```bash
+           _   __      _
+          / | / /___ _(_)___  _  __
+         /  |/ / __ `/ / __ \| |/_/
+        / /|  / /_/ / / / / />  <
+       /_/ |_/\__, /_/_/ /_/_/|_|
+    	     /____/
+    __  ___      _       __
+   /  |/  /___ _(_)___  / /____  ____  ____ _____  ________
+  / /|_/ / __ `/ / __ \/ __/ _ \/ __ \/ __ `/ __ \/ ___/ _ \
+ / /  / / /_/ / / / / / /_/  __/ / / / /_/ / / / / /__/  __/
+/_/  /_/\__,_/_/_/ /_/\__/\___/_/ /_/\__,_/_/ /_/\___/\___/
+
+```
 [![GitHub release](https://img.shields.io/github/release/tmiland/Nginx-Maintenance-Mode.svg?style=for-the-badge)](https://github.com/tmiland/Nginx-Maintenance-Mode/releases)
 [![licence](https://img.shields.io/github/license/tmiland/Nginx-Maintenance-Mode.svg?style=for-the-badge)](https://github.com/tmiland/Nginx-Maintenance-Mode/blob/master/LICENSE)
 ![Bash](https://img.shields.io/badge/Language-SH-4EAA25.svg?style=for-the-badge)
@@ -20,16 +34,25 @@ $ cd Nginx-Maintenance-Mode
 $ cp -rp ./maintenance-page.conf /etc/nginx/snippets/
 $ git clone https://github.com/alexphelps/server-error-pages.git /etc/nginx/html/server-error-pages
 $ cp -rp /etc/nginx/html/server-error-pages/_site/maintenance-page.html /etc/nginx/html/server-error-pages/_site/maintenance-page_off.html
-$ nginx -t # Check for errors, if found, correct them and;
 $ chmod +x maintenance.sh
 ```
 
 ### Add to server directive
 
 ```
+server {
+
 ## Nginx Maintenance Mode
 include snippets/maintenance-page.conf;
+
+}
 ```
+
+### Check for errors
+```bash
+$ nginx -t 
+```
+
 
 - Add to each virtual server in /etc/nginx/sites-available you want to enable maintenance mode on.
 - Else, add to nginx.conf.
