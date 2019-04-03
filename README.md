@@ -48,7 +48,14 @@ include snippets/maintenance-page.conf;
 }
 ```
 
+#### Optionally
+
+```bash
+$ ln -s /path/to/Nginx-Maintenance-Mode/maintenance.sh /usr/bin/maintenance
+```
+
 #### Check for errors
+
 ```bash
 $ nginx -t 
 ```
@@ -61,6 +68,13 @@ $ nginx -t
 ```bash
 $ ./maintenance.sh [hostname] [on/off]
 ```
+
+#### Optionally
+
+```bash
+$ maintenance [hostname] [on/off]
+```
+
 *** Note: [hostname] must match the hostname in your.hostname.com.conf/nginx.conf ***
 
 ```
