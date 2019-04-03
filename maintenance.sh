@@ -11,7 +11,7 @@ set -e
 ######################################################################
 
 
-version='1.0.1'
+version='1.0.2'
 #------------------------------------------------------------------------------#
 #
 # MIT License
@@ -41,6 +41,14 @@ version='1.0.1'
 SERVICE_NAME=nginx.service
 maintenance_file_path=/etc/nginx/html/server-error-pages/_site
 GITHUB_REPO=https://github.com/tmiland/Nginx-Maintenance-Mode
+# Detect absolute and full path as well as filename of this script
+cd "$(dirname $0)"
+CURRDIR=$(pwd)
+SCRIPT_FILENAME=$(basename $0)
+cd - > /dev/null
+sfp=$(readlink -f "${BASH_SOURCE[0]}" 2>/dev/null || greadlink -f "${BASH_SOURCE[0]}" 2>/dev/null)
+if [ -z "$sfp" ]; then sfp=${BASH_SOURCE[0]}; fi
+SCRIPT_DIR=$(dirname "${sfp}")
 # Icons used for printing
 ARROW='➜'
 DONE='✔'
