@@ -32,7 +32,7 @@
 $ git clone https://github.com/tmiland/Nginx-Maintenance-Mode.git
 $ cd Nginx-Maintenance-Mode
 $ cp -rp ./maintenance-page.conf /etc/nginx/snippets/
-$ git clone https://github.com/alexphelps/server-error-pages.git /etc/nginx/html/server-error-pages
+$ git clone https://github.com/tmiland/server-error-pages.git /etc/nginx/html/server-error-pages
 $ cp -rp /etc/nginx/html/server-error-pages/_site/maintenance-page.html /etc/nginx/html/server-error-pages/_site/maintenance-page_off.html
 $ chmod +x maintenance.sh
 ```
