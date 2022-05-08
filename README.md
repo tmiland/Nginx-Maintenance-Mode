@@ -188,7 +188,8 @@ As [recommended by Google](https://webmasters.googleblog.com/2011/01/how-to-deal
   - Source: https://github.com/czerasz/nginx-configuration-examples
   - Source: https://czerasz.com/2015/04/21/nginx-maintenance-mode/
 
-## Donations 
+## Donations
+<a href="https://www.buymeacoffee.com/tmiland" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 - [PayPal me](https://paypal.me/milanddata)
 - [BTC] : 33mjmoPxqfXnWNsvy8gvMZrrcG3gEa3YDM
 
