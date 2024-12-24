@@ -193,12 +193,6 @@ As [recommended by Google](https://webmasters.googleblog.com/2011/01/how-to-deal
 - [PayPal me](https://paypal.me/milanddata)
 - [BTC] : 33mjmoPxqfXnWNsvy8gvMZrrcG3gEa3YDM
 
-## Web Hosting
-
-Sign up for web hosting using this link, and receive $100 in credit over 60 days.
-
-[DigitalOcean](https://m.do.co/c/f1f2b475fca0)
-
 #### Disclaimer 
 
 *** ***Use at own risk*** ***
